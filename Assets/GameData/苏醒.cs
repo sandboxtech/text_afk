@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace W
 {
-    public class купя : ActionNode
+    public class купя : втнр
     {
 
         public override void StartAction()
@@ -21,7 +21,7 @@ namespace W
             {
                 if (TimesDone >= 3)
                 {
-                    return new Wander();
+                    return new л╫кВ();
                 }
                 return this;
             }

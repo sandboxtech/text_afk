@@ -13,7 +13,7 @@ namespace W
         public virtual string Title { get => GetType().Name; }
 
         [JsonIgnore]
-        public virtual string StartText { get => null; }
+        public virtual string StartText { get => $"Î´ÌîÐ´ÎÄ°¸ {GetType().Name}"; }
         [JsonIgnore]
         public virtual string EndText { get => null; }
 

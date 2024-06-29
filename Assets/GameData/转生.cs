@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 namespace W
 {
-    public class 转生 : ActionNode
+    public class 转生 : 自我
     {
         public override void StartAction()
         {
@@ -17,7 +17,7 @@ namespace W
         {
             get
             {
-                if (Game.Data.Enables.Contains(nameof(苏醒)))
+                if (Game.Data.EnabledActions.Contains(nameof(苏醒)))
                 {
                     return new 苏醒();
                 }

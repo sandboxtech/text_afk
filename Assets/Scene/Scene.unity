@@ -219,7 +219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &92608900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonEntryPrefab: {fileID: 5642690913788931037, guid: 90041d2365ae18a4cb60ecba41e4b5ff, type: 3}
-  ActionContent: {fileID: 825686562}
+  ButtonContent: {fileID: 825686562}
   ProgressTextPrefab: {fileID: 6797772493457810645, guid: bcd1b842542e7d149b1756512b71cc0f, type: 3}
   ProgressContent: {fileID: 1843877404}
   ProgressSlider: {fileID: 586564511}
@@ -1509,7 +1509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1661,7 +1661,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1183499616
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1972,7 +1972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2270,7 +2270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2311,6 +2311,7 @@ GameObject:
   - component: {fileID: 1628683762}
   - component: {fileID: 1628683761}
   - component: {fileID: 1628683760}
+  - component: {fileID: 1628683763}
   m_Layer: 5
   m_Name: "\u89C2"
   m_TagString: Untagged
@@ -2381,7 +2382,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1898135210}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1628683763}
+        m_TargetAssemblyTypeName: "W.\u89C2, Assembly-CSharp"
+        m_MethodName: OnTap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1628683761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2420,6 +2433,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1628683758}
   m_CullTransparentMesh: 1
+--- !u!114 &1628683763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628683758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37cc321640b3a1a45b98ff3882df71da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1685887212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2959,7 +2984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3154,6 +3179,7 @@ GameObject:
   - component: {fileID: 2025000615}
   - component: {fileID: 2025000614}
   - component: {fileID: 2025000616}
+  - component: {fileID: 2025000617}
   m_Layer: 5
   m_Name: "\u884C"
   m_TagString: Untagged
@@ -3262,7 +3288,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1440521612}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2025000617}
+        m_TargetAssemblyTypeName: "W.\u884C, Assembly-CSharp"
+        m_MethodName: OnTap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2025000617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025000612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0d4d6ea898a1f4f8c81d7881644328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2061694580
 GameObject:
   m_ObjectHideFlags: 0

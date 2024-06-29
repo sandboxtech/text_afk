@@ -10,9 +10,15 @@ namespace W
     [JsonObject(MemberSerialization.OptOut)]
     public class ActionStack
     {
-        public static ActionStack Create(ActionNode node)
+        [JsonProperty]
+        public string Name { get; protected set; }
+
+        [JsonIgnore]
+        public virtual bool Visible { get => false; }
+
+        public static T Create<T>(ActionNode node) where T : ActionStack, new()
         {
-            ActionStack stack = new ActionStack();
+            T stack = new T();
             stack.Nodes = new List<ActionNode> { node };
             stack.Messages = new List<string>();
             return stack;

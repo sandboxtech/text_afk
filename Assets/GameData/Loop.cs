@@ -3,13 +3,17 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace W
 {
+
+
     public class Loop : MonoBehaviour
     {
+
         [NonSerialized] private Game game;
 
 
@@ -54,39 +58,77 @@ namespace W
         }
         private void AfterLoadOrInitialize()
         {
-            foreach (string name in game.Showns)
-            {
-                AddButtonEntry(name).Visible(game.Enables.Contains(name));
-            }
-            game.OnShownsChange = OnShownsChange;
+            game.OnEnterState = EnterState;
+            game.OnExitState = ExitState;
+            EnterState(game.UIState);
+
             foreach (ActionStack stack in game.Stacks)
             {
                 stack.OnStartNode = (ActionNode node) =>
                 {
                     if (stack == game.ActiveActionStack)
                     {
-                        StartActiveNode(stack, node);
+                        SyncMessages(stack);
                     }
                 };
             }
         }
 
+        private void EnterState(UIState state)
+        {
+            EnterOrExitState(state, true);
+        }
+        private void ExitState(UIState state)
+        {
+            EnterOrExitState(state, false);
+        }
+        private void EnterOrExitState(UIState state, bool enter)
+        {
+            switch (state)
+            {
+                case UIState.ÐÐ:
+                    if (enter)
+                    {
+                        game.OnShownActionsChange = OnShownActionChange;
+                        game.ActiveActionStackIndex = 0;
+                        SyncActions();
+                    }
+                    else
+                    {
+                        game.OnShownActionsChange = null;
+                        shownActionPrefabs.Clear();
+                    }
+                    break;
+                case UIState.¹Û:
+                    if (enter)
+                    {
+                        SyncStacks();
+                    }
+                    else
+                    {
+
+                    }
+                    break;
+                default:
+                    throw new Exception();
+            }
+        }
         [SerializeField] private ButtonEntry ButtonEntryPrefab;
-        [SerializeField] private Transform ActionContent;
+        [SerializeField] private Transform ButtonContent;
         [NonSerialized] private Dictionary<string, ButtonEntry> shownActionPrefabs = new Dictionary<string, ButtonEntry>();
-        private void OnShownsChange(string name, bool shown)
+        private void OnShownActionChange(string name, bool shown)
         {
             bool has = shownActionPrefabs.TryGetValue(name, out ButtonEntry buttonEntry);
             if (shown && !has)
             {
                 buttonEntry = AddButtonEntry(name);
             }
-            buttonEntry.Visible(game.Enables.Contains(name));
+            buttonEntry.Visible(game.EnabledActions.Contains(name));
             buttonEntry.gameObject.SetActive(shown);
         }
         private ButtonEntry AddButtonEntry(string name)
         {
-            ButtonEntry entry = Instantiate(ButtonEntryPrefab, ActionContent);
+            ButtonEntry entry = Instantiate(ButtonEntryPrefab, ButtonContent);
             shownActionPrefabs.Add(name, entry);
             entry.text.text = name;
             entry.gameObject.SetActive(true);
@@ -94,11 +136,65 @@ namespace W
             {
                 bool newState = !entry.Visible();
                 entry.Visible(newState);
-                game.Enables.MySet(name, newState);
+                game.EnabledActions.MySet(name, newState);
             });
             return entry;
         }
 
+        private void SyncActions()
+        {
+            ButtonContent.DestroyAllChildren();
+            foreach (string name in game.ShownActions)
+            {
+                ButtonEntry entry = Instantiate(ButtonEntryPrefab, ButtonContent);
+                shownActionPrefabs.Add(name, entry);
+                entry.text.text = name;
+                // entry.gameObject.SetActive(true);
+                entry.button.onClick.AddListener(() =>
+                {
+                    bool newState = !entry.Visible();
+                    entry.Visible(newState);
+                    game.EnabledActions.MySet(name, newState);
+                });
+                entry.Visible(game.EnabledActions.Contains(name));
+            }
+        }
+
+        private void SyncStacks()
+        {
+            ButtonContent.DestroyAllChildren();
+
+            int i = 0;
+            foreach (ActionStack stack in game.Stacks)
+            {
+                if (stack.Visible)
+                {
+                    ButtonEntry entry = Instantiate(ButtonEntryPrefab, ButtonContent);
+                    entry.text.text = stack.Name;
+                    int t = i;
+                    entry.button.onClick.AddListener(() =>
+                    {
+                        Game.Data.ActiveActionStackIndex = t;
+                        SyncMessages(stack);
+                    });
+                }
+                i++;
+            }
+        }
+
+        private void SyncMessages(ActionStack stack)
+        {
+            ProgressText.text = stack.LastNode.Title;
+            ProgressContent.DestroyAllChildren();
+            for (int i = stack.Messages.Count - 1; i >= 0; i--)
+            {
+                string message = stack.Messages[i];
+                Text text = Instantiate(ProgressTextPrefab, ProgressContent);
+                text.text = message;
+                text.name = text.text;
+            }
+            ProgressContent.FadeChildren();
+        }
 
         [SerializeField] private Text ProgressTextPrefab;
         [SerializeField] private Transform ProgressContent;
@@ -112,73 +208,14 @@ namespace W
             {
                 stack.Simulate(dt);
             }
-            ProgressSlider.value = game.ActiveActionStack.Progress;
-        }
-
-        private void StartActiveNode(ActionStack stack, ActionNode node)
-        {
-            ProgressText.text = node.Title;
-            SyncMessages(stack);
-        }
-
-        private void SyncMessages(ActionStack stack)
-        {
-            DestroyAllChildren(ProgressContent);
-            int i = 0;
-            foreach (string message in stack.Messages)
             {
-                Text text = Instantiate(ProgressTextPrefab, ProgressContent);
-                text.text = message;
-                text.transform.SetAsFirstSibling();
-                text.name = text.text;
-                i++;
-                if (i >= 10)
+                ActionStack stack = game.ActiveActionStack;
+                if (stack != null)
                 {
-                    break;
+                    ProgressSlider.value = stack.Progress;
                 }
             }
-            FadeChildren(ProgressContent);
+
         }
-
-        private void FadeChildren(Transform trans)
-        {
-            int childCount = trans.childCount;
-            int i = 0;
-            foreach (Transform t in trans)
-            {
-                float v = 0.875f * Mathf.Pow(0.5f, i);
-                Text text = t.GetComponent<Text>();
-                if (text != null)
-                {
-                    text.color = new Color(1, 1, 1, v);
-                }
-                i++;
-            }
-        }
-
-        private void DestroyAllChildren(Transform trans)
-        {
-            foreach (Transform t in trans)
-            {
-                Destroy(t.gameObject);
-            }
-        }
-
-        private void DestroryExcessChildren(Transform trans, int count)
-        {
-            int childCount = trans.childCount;
-
-            if (childCount > count)
-            {
-                for (int i = childCount - 1; i >= count; i--)
-                {
-                    Transform child = trans.GetChild(i);
-                    child.SetParent(null);
-                    Destroy(child.gameObject);
-                }
-            }
-        }
-
-
     }
 }
