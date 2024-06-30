@@ -19,19 +19,22 @@ namespace W
         {
             get
             {
-                if (TimesDone >= 3)
-                {
-                    return new Ì½Ë÷();
-                }
-                return this;
+                return new Ì½Ë÷();
             }
         }
 
-        public override float Duration => base.Duration * 2;
+        public override float Duration => base.Duration * 4;
 
         public override string Title => "ËÕÐÑÖÐ...";
 
-        public override string StartText => descriptions[UnityEngine.Random.Range(0, descriptions.Count)];
+        public override string StartText => RandomTest();
+
+        private static string RandomTest()
+        {
+            int step = descriptions.Count / 3;
+
+            return $"{descriptions[UnityEngine.Random.Range(0, step)]}\n{descriptions[UnityEngine.Random.Range(step, step * 2)]}\n{descriptions[UnityEngine.Random.Range(step * 2, step * 3)]}";
+        }
 
         public readonly static List<string> descriptions = new List<string>()
     {

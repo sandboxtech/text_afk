@@ -68,11 +68,11 @@ namespace W
                 {
                     if (stack == game.ActiveActionStack)
                     {
-                        SyncMessages(stack);
+                        SyncMessages();
                     }
                 };
             }
-            SyncMessages(game.ActiveActionStack);
+            SyncMessages();
         }
 
         private void EnterState(UIState state)
@@ -90,14 +90,14 @@ namespace W
                 case UIState.ÐÐ:
                     if (enter)
                     {
-                        game.OnShownActionsChange = OnShownActionChange;
+                        game.OnShownActionsChange = SyncActions;
                         game.ActiveActionStackIndex = 0;
                         SyncActions();
+                        SyncMessages();
                     }
                     else
                     {
                         game.OnShownActionsChange = null;
-                        shownActionPrefabs.Clear();
                     }
                     break;
                 case UIState.¹Û:
@@ -116,31 +116,6 @@ namespace W
         }
         [SerializeField] private ButtonEntry ButtonEntryPrefab;
         [SerializeField] private Transform ButtonContent;
-        [NonSerialized] private Dictionary<string, ButtonEntry> shownActionPrefabs = new Dictionary<string, ButtonEntry>();
-        private void OnShownActionChange(string name, bool shown)
-        {
-            bool has = shownActionPrefabs.TryGetValue(name, out ButtonEntry buttonEntry);
-            if (shown && !has)
-            {
-                buttonEntry = AddButtonEntry(name);
-            }
-            buttonEntry.Visible(game.EnabledActions.Contains(name));
-            buttonEntry.gameObject.SetActive(shown);
-        }
-        private ButtonEntry AddButtonEntry(string name)
-        {
-            ButtonEntry entry = Instantiate(ButtonEntryPrefab, ButtonContent);
-            shownActionPrefabs.Add(name, entry);
-            entry.text.text = name;
-            entry.gameObject.SetActive(true);
-            entry.button.onClick.AddListener(() =>
-            {
-                bool newState = !entry.Visible();
-                entry.Visible(newState);
-                game.EnabledActions.MySet(name, newState);
-            });
-            return entry;
-        }
 
         private void SyncActions()
         {
@@ -148,12 +123,12 @@ namespace W
             foreach (string name in game.ShownActions)
             {
                 ButtonEntry entry = Instantiate(ButtonEntryPrefab, ButtonContent);
-                shownActionPrefabs.Add(name, entry);
                 entry.text.text = name;
-                // entry.gameObject.SetActive(true);
+                entry.gameObject.SetActive(true);
                 entry.button.onClick.AddListener(() =>
                 {
                     bool newState = !entry.Visible();
+                    Audio.Play.Click(newState);
                     entry.Visible(newState);
                     game.EnabledActions.MySet(name, newState);
                 });
@@ -175,16 +150,18 @@ namespace W
                     int t = i;
                     entry.button.onClick.AddListener(() =>
                     {
+                        Audio.Play.Click();
                         Game.Data.ActiveActionStackIndex = t;
-                        SyncMessages(stack);
+                        SyncMessages();
                     });
                 }
                 i++;
             }
         }
 
-        private void SyncMessages(ActionStack stack)
+        private void SyncMessages()
         {
+            ActionStack stack = game.ActiveActionStack;
             ProgressText.text = stack.LastNode.Title;
             ProgressContent.DestroyAllChildren();
             for (int i = stack.Messages.Count - 1; i >= 0; i--)
@@ -216,7 +193,6 @@ namespace W
                     ProgressSlider.value = stack.Progress;
                 }
             }
-
         }
     }
 }

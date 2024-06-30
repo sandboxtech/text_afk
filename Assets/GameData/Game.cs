@@ -48,9 +48,9 @@ namespace W
         private void SetShown(string name, bool shown)
         {
             ShownActions.MySet(name, shown);
-            OnShownActionsChange?.Invoke(name, shown);
+            OnShownActionsChange?.Invoke();
         }
-        public Action<string, bool> OnShownActionsChange { private get; set; }
+        public Action OnShownActionsChange { private get; set; }
 
         [JsonProperty]
         public HashSet<string> EnabledActions; // 是否启用。程序自动决定是否展示

@@ -72,14 +72,16 @@ namespace W
                     }
                     else
                     {
-
                         // 上推
                         next = node.Next;
-                        Nodes.RemoveAt(Nodes.Count - 1);
-                        // 下推?
-                        if (next != null)
+                        if (next != node)
                         {
-                            Nodes.Add(next);
+                            Nodes.RemoveAt(Nodes.Count - 1);
+                            // 下推?
+                            if (next != null)
+                            {
+                                Nodes.Add(next);
+                            }
                         }
                     }
 
