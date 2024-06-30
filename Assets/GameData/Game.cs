@@ -94,14 +94,20 @@ namespace W
             EnabledActions = new HashSet<string>();
 
             ActiveActionStackIndex = 0;
-            Stacks = new List<ActionStack>
-            {
-                行动.Create(),
-                季节.Create(),
-                昼夜.Create()
-            };
 
             GameStatus = new Dictionary<string, int>();
+
+            Stacks = new List<ActionStack>
+            {
+                ActionStack.Create<行动>(new 转生(), nameof(行动)),
+                ActionStack.Create<季节>(new 夏季(), nameof(季节)),
+                ActionStack.Create<昼夜>(new 晚上(), nameof(昼夜)),
+                ActionStack.Create<月相>(new 上弦(), nameof(月相)),
+            };
+
+            foreach (var stack in Stacks) {
+                stack._StartNode();
+            }
         }
 
     }

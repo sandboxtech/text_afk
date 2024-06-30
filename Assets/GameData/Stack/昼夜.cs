@@ -6,14 +6,12 @@ namespace W
         public override bool Visible => true;
         public static 昼夜 Create()
         {
-            昼夜 stack = Create<昼夜>(new 晚上());
-            stack.Name = nameof(昼夜);
-            return stack;
+            return Create<昼夜>(new 晚上(), nameof(昼夜));
         }
     }
     public class 昼夜Node : ActionNode
     {
-        public override float Duration => 8;
+        public override float Duration => GameTime.Day / 2;
     }
     public class 白天 : ActionNode
     {

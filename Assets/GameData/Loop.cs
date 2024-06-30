@@ -72,6 +72,7 @@ namespace W
                     }
                 };
             }
+            SyncMessages(game.ActiveActionStack);
         }
 
         private void EnterState(UIState state)
